@@ -1,4 +1,3 @@
-```groovy
 pipeline {
     agent any
 
@@ -43,20 +42,19 @@ pipeline {
             }
         }
 
-stage('Deploy Website') {
-    steps {
-        sh """
-        scp -r -i ${KEY_PATH} -o StrictHostKeyChecking=no website/* \
-        ubuntu@${SERVER_IP}:/tmp/
-        """
+        stage('Deploy Website') {
+            steps {
+                sh """
+                scp -r -i ${KEY_PATH} -o StrictHostKeyChecking=no website/* ubuntu@${SERVER_IP}:/tmp/
+                """
 
-        sh """
-        ssh -i ${KEY_PATH} -o StrictHostKeyChecking=no ubuntu@${SERVER_IP} "
-        sudo rm -rf /var/www/html/* &&
-        sudo mv /tmp/* /var/www/html/ &&
-        sudo systemctl restart nginx"
-        """
+                sh """
+                ssh -i ${KEY_PATH} -o StrictHostKeyChecking=no ubuntu@${SERVER_IP} "
+                sudo rm -rf /var/www/html/* &&
+                sudo mv /tmp/* /var/www/html/ &&
+                sudo systemctl restart nginx"
+                """
+            }
+        }
     }
-}
- }
 }
